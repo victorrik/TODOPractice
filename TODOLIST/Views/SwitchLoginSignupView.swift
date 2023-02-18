@@ -23,6 +23,7 @@ struct SwitchLoginSignupView: View {
 						.transition(.backslide)
 				}
 			}
+			.navigationBarHidden(true)
     }
 }
 

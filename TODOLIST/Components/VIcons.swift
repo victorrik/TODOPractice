@@ -8,26 +8,31 @@
 import SwiftUI
 
 enum IconsAvailable:String {
-	case arrowLeft = "arrow.left"
-	case boxArrowUpRight = "square.and.arrow.up"
+	case plus = "plus"
+	case plusSquare = "plus.square"
+	case plusCircle = "plus.circle"
+	case lineHorizontal = "line.3.horizontal"
+	case book = "book"
 	case calendar = "calendar"
-	case check = "checkmark"
+	case rectangleArrowRight = "rectangle.portrait.and.arrow.right"
+	case trash = "trash"
+	case chevronLeft = "chevron.left"
 	case chevronRight = "chevron.right"
-	case clipboard = "clipboard"
-	case dash = "minus"
+	case bubbleLeft = "bubble.left"
+	case gearshape = "gearshape"
+	case checkmarkSquare = "checkmark.square"
+	case star = "star"
+	case lineDecreaseCircle = "line.3.horizontal.decrease.circle"
+	case pencil = "pencil"
+	case photo = "photo"
+	case magnifyingglass = "magnifyingglass"
+	case clock = "clock"
+	case lock = "lock"
+	case person = "person"
 	case envelope = "envelope"
 	case eye = "eye"
 	case eyeSlash = "eye.slash"
-	case graphUpArrow = "chart.line.uptrend.xyaxis"
-	case infoCircle = "info.circle"
-	case link45deg = "link"
-	case lock = "lock"
-	case pencilSquare = "square.and.pencil"
-	case pencil = "pencil"
-	case person = "person"
-	case personPlus = "person.badge.plus"
-	case share = "square.and.arrow.up.circle"
-	case x = "xmark"
+	 
 }
 struct VIcons: View {
 	let name: IconsAvailable
@@ -52,7 +57,42 @@ struct VIcons: View {
 
 struct VIcons_Previews: PreviewProvider {
 		static var previews: some View {
-				VIcons()
+			VStack(spacing:20){
+				HStack(spacing:20){
+					VIcons(name:.plus, size: 40)
+					VIcons(name:.plusSquare, size: 40)
+					VIcons(name:.plusCircle, size: 40)
+					VIcons(name:.lineHorizontal, size: 40)
+					VIcons(name:.book, size: 40)
+				}
+				HStack(spacing:20){
+					VIcons(name:.calendar, size: 40)
+					VIcons(name:.rectangleArrowRight, size: 40)
+					VIcons(name:.trash, size: 40)
+					VIcons(name:.chevronLeft, size: 40)
+					VIcons(name:.chevronRight, size: 40)
+				}
+				HStack(spacing:20){
+					VIcons(name:.bubbleLeft, size: 40)
+					VIcons(name:.gearshape, size: 40)
+					VIcons(name:.checkmarkSquare, size: 40)
+					VIcons(name:.star, size: 40)
+					VIcons(name:.lineDecreaseCircle, size: 40)
+				}
+				HStack(spacing:20){
+					VIcons(name:.pencil, size: 40)
+					VIcons(name:.photo, size: 40)
+					VIcons(name:.magnifyingglass, size: 40)
+					VIcons(name:.clock, size: 40)
+					VIcons(name:.lock, size: 40)
+				}
+				HStack(spacing:20){
+					VIcons(name:.person, size: 40)
+					VIcons(name:.envelope, size: 40)
+					VIcons(name:.eye, size: 40)
+					VIcons(name:.eyeSlash, size: 40)
+				}
+			}
 		}
 }
 

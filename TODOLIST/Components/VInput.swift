@@ -30,12 +30,11 @@ final class VInputRef: ObservableObject {
 struct VInput: View {
 	@Binding var value:String
 	@FocusState private var isFocused: Bool
-	@State private var isTapped:Bool = false
 	@ObservedObject var inputRef:VInputRef
 	let labelPlaceholder:String
 	var caption:String = ""
 	var autocapitalization: TextInputAutocapitalization? = nil
-	var keyboardType: UIKeyboardType = .default
+	let keyboardType: UIKeyboardType
 	var type: InputType = .text
 	let iconPrefix: IconsAvailable?
 	var iconPrefixAction: ()-> Void = {}
@@ -71,23 +70,35 @@ struct VInput: View {
 		isFocused || !value.isEmpty
 	}
 	
-	 
+	
 	var body: some View {
 		VStack(alignment: .leading,
 					 spacing: 6,
 					 content: {
+			
 			HStack(spacing:8){
 				if (iconPrefix != nil){
 					Button(action: iconPrefixAction , label: {
 						VIcons(name:iconPrefix!,color: .gray, size:24)
 					})
 				}
-				switch type {
-				case .text:
-					textInput
-				case .password:
-					passwordInput
+				Group{
+					if type == .text {
+						TextField("",text: $value)
+					}else{
+						SecureField("", text: $value)
+					}
 				}
+				.keyboardType(keyboardType)
+				.focused($isFocused)
+				.textInputAutocapitalization(autocapitalization)
+				.onSubmit {
+					isFocused = false
+				}
+				.frame(height: 28)
+				.font(.custom("Montserrat", size: 16))
+				.foregroundColor(.V272727.opacity(0.5))
+				
 				if (iconSuffix != nil){
 					Button(action: iconSuffixAction, label: {
 						VIcons(name:iconSuffix!,color: .gray,size:24)
@@ -100,7 +111,7 @@ struct VInput: View {
 				ZStack(alignment: .leading){
 					RoundedRectangle(cornerRadius: 12)
 						.strokeBorder(Color.V272727.opacity(0.5),style: StrokeStyle(lineWidth: 1.0))
-						 
+					
 					VFont(labelPlaceholder,type: .b1)
 						.background(content:{
 							Rectangle()
@@ -123,40 +134,17 @@ struct VInput: View {
 		})
 	}
 	
-	var textInput: some View {
-		TextField("",text: $value)
-			.focused($isFocused)
-			.textInputAutocapitalization(autocapitalization)
-			.keyboardType(keyboardType)
-			.onSubmit {
-				isTapped = false
-			}
-			.frame(height: 28)
-			.font(.custom("Montserrat", size: 16))
-			.foregroundColor(.V272727.opacity(0.5))
-	}
-	var passwordInput: some View {
-		SecureField("", text: $value)
-			.focused($isFocused)
-			.textInputAutocapitalization(autocapitalization)
-			.keyboardType(keyboardType)
-			.onSubmit {
-				isTapped = false
-			}
-			.frame(height: 28)
-			.font(.custom("Montserrat", size: 16))
-			.foregroundColor(.V272727.opacity(0.5))
-	}
+	
 }
 
 struct VInput_Previews: PreviewProvider {
-		static var previews: some View {
-			VStack(spacing:20){
-				VInput(value: .constant("asd"),labelPlaceholder: "meow",caption: "caption"  )
-				VInput(value: .constant(""), labelPlaceholder: "Correo"  )
-				VInput(value: .constant("sd"), labelPlaceholder: "Contrasela", iconPrefix: .lock, iconSuffix: .eye  )
-				VInput(value: .constant("sd"), labelPlaceholder: "Contrasela", type: .password, iconPrefix: .lock, iconSuffix: .eye  )
-				VInput(value: .constant(""), labelPlaceholder: "Correo electronico"  )
-			}
+	static var previews: some View {
+		VStack(spacing:20){
+			VInput(value: .constant("asd"),labelPlaceholder: "meow",caption: "caption"  )
+			VInput(value: .constant(""), labelPlaceholder: "Correo"  )
+			VInput(value: .constant("sd"), labelPlaceholder: "Contrasela", iconPrefix: .lock, iconSuffix: .eye  )
+			VInput(value: .constant("sd"), labelPlaceholder: "Contrasela", type: .password, iconPrefix: .lock, iconSuffix: .eye  )
+			VInput(value: .constant(""), labelPlaceholder: "Correo electronico"  )
 		}
+	}
 }

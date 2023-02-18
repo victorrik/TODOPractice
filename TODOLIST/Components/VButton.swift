@@ -6,30 +6,37 @@
 //
 
 import SwiftUI
-
-struct VButtonModifier: ViewModifier {
-	func body(content:Content) -> some View {
-		content
-			.frame(height: 48)
-			.frame(maxWidth: .infinity)
-			.foregroundColor(.white)
-			.background(Color.VF79E89)
-			.buttonStyle(.plain)
-			.cornerRadius(12)
-			
+ 
+struct TestingButtonView: View {
+	
+	@ObservedObject var buttonRef:VButtonRef = VButtonRef()
+	func makeLikeIDo() {
+		buttonRef.handleLoading(true)
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+			buttonRef.handleLoading(false)
+		}
+	}
+	var body: some View {
+		VStack{
+			 
+			VButton("Button normal") {
+				print("Waku Waku")
+			}
+			VButton("Button with load", action: {
+				makeLikeIDo()
+			}, ref:buttonRef)
+			VButton("Button with load",type: .secondary, action: {
+				makeLikeIDo()
+			},  ref:buttonRef)
+			Text("Im loading ->\(buttonRef.isLoading ? "yes":"Not")")
+		}
 	}
 }
-
-extension Button {
-	func vButton() -> some View {
-		self.modifier(VButtonModifier())
-	}
-}
-
 
 enum ButtonType {
 	case primary, secondary, tertiary
 }
+
 final class VButtonRef: ObservableObject {
 	@Published var isLoading: Bool = false
 	
@@ -42,17 +49,18 @@ struct VButton: View {
 	let type: ButtonType
 	var title: String
 	let action: ()-> Void
-	var icon: String?
+	var icon: IconsAvailable?
 	var disabled: Bool = false
 	var iconLeft: Bool = false
-	@ObservedObject var butonRef: VButtonRef = VButtonRef()
+	@ObservedObject var buttonRef: VButtonRef = VButtonRef()
+	
 	init(_ title: String,
 			 type: ButtonType = .primary,
 			 action:@escaping ()-> Void,
-			 icon: String? = nil,
+			 icon: IconsAvailable? = nil,
 			 disabled: Bool = false,
 			 iconLeft: Bool = false,
-			 butonRef: VButtonRef = VButtonRef()
+			 ref: VButtonRef = VButtonRef()
  ) {
 		self.type = type
 		self.title = title
@@ -60,24 +68,29 @@ struct VButton: View {
 		self.icon = icon
 		self.disabled = disabled
 		self.iconLeft = iconLeft
-		self.butonRef = butonRef
+		self.buttonRef = ref
 	}
     var body: some View {
 			ZStack{
 				 Button(action: action, label: {
 					 VFont(title,type: .button)
+						 .frame(height: 48)
+							.frame(maxWidth: .infinity)
+							.foregroundColor(type == .primary ? .white : Color.VF79E89)
+							.background(type == .primary ? Color.VF79E89 : .white)
+							.cornerRadius(12)
 				 })
-				 .vButton()
-			 
-				if butonRef.isLoading {
+				 .buttonStyle(.plain)
+				if buttonRef.isLoading {
 					
-					HStack{
+					VStack{
 						ProgressView()
-							.progressViewStyle(CircularProgressViewStyle(tint: .white))
+							.progressViewStyle(CircularProgressViewStyle(tint: type == .primary ? .white : Color.VF79E89))
 					}
 					.frame(height: 48)
 					.frame(maxWidth: .infinity)
-					.background(Color.VF79E89)
+					.background(type == .primary ? Color.VF79E89 : .white)
+					.cornerRadius(12)
 					
 				}
 				
@@ -87,8 +100,6 @@ struct VButton: View {
 
 struct VButton_Previews: PreviewProvider {
     static var previews: some View {
-        VButton("Botton",action: {
-					print("meow")
-				})
+			TestingButtonView()
     }
 }

@@ -21,13 +21,14 @@ extension Color {
 }
 
 extension AnyTransition {
-		static var backslide: AnyTransition {
-				AnyTransition.asymmetric(
-						insertion: .move(edge: .trailing),
-						removal: .move(edge: .leading)
-				)
-		}
+	static var backslide: AnyTransition {
+		AnyTransition.asymmetric(
+			insertion: .move(edge: .trailing),
+			removal: .move(edge: .leading)
+		)
+	}
 }
+
 enum Configuration {
 	enum Error: Swift.Error{
 		case missingKey , invalidValue
@@ -57,44 +58,43 @@ struct TODOLISTApp: App {
 	let ipHosting:String = try! Configuration.value(for: .IP)
 	
 	init(){
-		
 		FirebaseApp.configure()
 		#if DEVELOPMENT
-			print(
-			"""
-			*********
-			DEVELOPMENT MODE IS ON
-			*********
-			"""
-			)
-			Auth.auth().useEmulator(withHost:"192.168.100.37", port:5009)
-			//Functions.functions().useEmulator(withHost:"192.168.100.37", port:5008)
-			let settings = Firestore.firestore().settings
-			settings.host = "192.168.100.37:5007"
-			settings.isPersistenceEnabled = false
-			settings.isSSLEnabled = false
-			Firestore.firestore().settings = settings
+				print(
+			 """
+			 *********
+			 DEVELOPMENT MODE IS ON
+			 *********
+			 """
+				)
+				Auth.auth().useEmulator(withHost:"192.168.100.37", port:4009)
+				//Functions.functions().useEmulator(withHost:"192.168.100.37", port:5008)
+				let settings = Firestore.firestore().settings
+				settings.host = "192.168.100.37:4007"
+				settings.isPersistenceEnabled = false
+				settings.isSSLEnabled = false
+				Firestore.firestore().settings = settings
 		#elseif DEBUG
-			print(
-			"""
-			*********
-			DEBUGGIN MODE IS ON
-			*********
-			"""
-			)
-			#else
-			print(
+				print(
 			 """
 			 *********
-			 RELEASE THE KRAKEN
+			 DEBUGGIN MODE IS ON
 			 *********
 			 """
-			 )
+				)
+		#else
+				print(
+				"""
+				*********
+				RELEASE THE KRAKEN
+				*********
+				"""
+				)
 		#endif
 	}
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+	var body: some Scene {
+		WindowGroup {
+			ContentView()
+		}
+	}
 }
