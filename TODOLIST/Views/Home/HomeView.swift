@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
 	@State var showNewTODO: Bool = false;
-	
+	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
 	var body: some View {
 		ZStack{
 			NavigationView{
@@ -64,7 +64,8 @@ struct HomeView: View {
 				.navigationViewStyle(.stack)
 				
 			}
-			NewTODOView(isShowing: $showNewTODO)
+			NewTODOView(isShowing: $showNewTODO,
+									homeViewModel: homeViewModel)
 		}
 	}
 }

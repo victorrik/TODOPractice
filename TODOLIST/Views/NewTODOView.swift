@@ -20,30 +20,33 @@ struct RoundedCornersShape: Shape {
 }
 struct BackNewTODOView: View {
 	@State var isShowing:Bool = true
+	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
 	
 	var body: some View {
-			ZStack{
-				VStack{
-					Button("Touch to show",action: {
-						isShowing = true
-						
-					})
-					.buttonStyle(.borderedProminent)
-				}
-				NewTODOView(isShowing: $isShowing)
+		ZStack{
+			VStack{
+				Button("Touch to show",action: {
+					isShowing = true
+					
+				})
+				.buttonStyle(.borderedProminent)
 			}
+			NewTODOView(isShowing: $isShowing,
+									homeViewModel: homeViewModel)
+		}
 	}
 }
 /**
  .onTapGesture {
-	 withAnimation(.linear(duration: 0.1)){
-		 curHeight = minHeight
-	 }
-	 //isShowing = false
+ withAnimation(.linear(duration: 0.1)){
+ curHeight = minHeight
+ }
+ //isShowing = false
  }
  */
 struct NewTODOView: View {
 	@Binding var isShowing:Bool
+	@ObservedObject var homeViewModel:HomeViewModel
 	@State private var curHeight: CGFloat = 500
 	@State private var prevDragTranslation = CGSize.zero
 	@State private var isDragging = false
@@ -52,6 +55,7 @@ struct NewTODOView: View {
 	@State private var paddingBottom: CGFloat = 10
 	@State private var title:String = ""
 	@State private var description:String = ""
+	
 	func setMaxMinSize(proxy:GeometryProxy) {
 		let lessTop = proxy.safeAreaInsets.top + 20
 		maxHeight = proxy.size.height - lessTop
@@ -70,19 +74,13 @@ struct NewTODOView: View {
 						.opacity(0.15)
 						.ignoresSafeArea()
 					
-						mainView
+					mainView
 						.transition(.move(edge: .bottom).combined(with: .opacity))
-					
-//					VStack{
-//						Text("proxy.size.height-->\(proxy.size.height)")
-//					Text("proxy.safeAreaInsets.top -->\(proxy.safeAreaInsets.top )")
-//					Text("proxy.safeAreaInsets.bottom-->\(proxy.safeAreaInsets.bottom)")
-//					}
 				}
 			}
 			.onAppear{
-					 setMaxMinSize(proxy:proxy)
-				 }
+				setMaxMinSize(proxy:proxy)
+			}
 			.ignoresSafeArea()
 			.frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .bottom)
 			
@@ -104,18 +102,98 @@ struct NewTODOView: View {
 			.gesture(dragGesture)
 			
 			ZStack{
-					VStack(spacing: 16){
-						TextField("Title", text: $title)
-						TextEditor(text: $description)
-						TextField("Deadline (Optional)", text: $title)
-						TextField("Add Image (Optional)", text: $title)
-						VButton("ADD TODO",type: .secondary,  action: {
-							print("agrega accion")
-						})
+				VStack(spacing: 16){
+					ZStack(alignment:.leading){
+						if title.isEmpty {
+							VFont("Title",type:.b1)
+								.foregroundColor(.white)
+								.offset(x:16)
+						}
+						
+						VStack{
+							TextField("", text: $title)
+								.accentColor(.white)
+								.frame(height: 48)
+								.foregroundColor(.white)
+								.font(.custom("Montserrat", size: 16))
+								.tint(.white)
+						}
+						.padding(.horizontal,16)
+						.background {
+							RoundedRectangle(cornerRadius: 12)
+								.strokeBorder(.white,lineWidth: 2)
+						}
 					}
-					.padding(.horizontal)
-					.padding(.bottom,paddingBottom + 20)
-					 
+					
+					ZStack(alignment: .topLeading){
+						if description.isEmpty{
+							VFont("Description",type:.b1)
+								.foregroundColor(.white)
+								.offset(x:16,y:16)
+								
+						}
+						
+						VTextArea(value: $description)
+							.accentColor(.white)
+							.padding(8)
+							.foregroundColor(.white)
+							.font(.custom("Montserrat", size: 16))
+							.background {
+								RoundedRectangle(cornerRadius: 12)
+									.strokeBorder(.white,lineWidth: 2)
+							}
+					}
+					ZStack(alignment:.leading){
+						if title.isEmpty {
+								VFont("Deadline (Optional)",type:.b1)
+								.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
+									.offset(x:16)
+						}
+						
+						HStack{
+							TextField("", text: $title)
+								.accentColor(.white)
+								.frame(height: 48)
+								.foregroundColor(.white)
+								.font(.custom("Montserrat", size: 16))
+								.tint(.white)
+							VIcons(name:.calendar,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
+						}
+						.padding(.horizontal,16)
+						.background {
+							RoundedRectangle(cornerRadius: 12)
+								.strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
+						}
+					}
+					ZStack(alignment:.leading){
+						if title.isEmpty {
+								VFont("Add Image (Optional)",type:.b1)
+								.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
+									.offset(x:16)
+						}
+						
+						HStack{
+							TextField("", text: $title)
+								.accentColor(.white)
+								.frame(height: 48)
+								.foregroundColor(.white)
+								.font(.custom("Montserrat", size: 16))
+								.tint(.white)
+							VIcons(name:.photo,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
+						}
+						.padding(.horizontal,16)
+						.background {
+							RoundedRectangle(cornerRadius: 12)
+								.strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
+						}
+					}
+					VButton("ADD TODO",type: .secondary,  action: {
+						print("agrega accion")
+					})
+				}
+				.padding(.horizontal)
+				.padding(.bottom,paddingBottom + 20)
+				
 			}
 			.frame(maxHeight: .infinity)
 			

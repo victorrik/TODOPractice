@@ -1,6 +1,9 @@
 
 .DS_Store
+/xcuserdata
 .xcuserdata
 .xcuserstate
 *.xcuserdata
 *.xcuserstate
+TODOLIST.xcodeproj/project.xcworkspace/xcuserdata/victorrik.xcuserdatad/UserInterfaceState.xcuserstate
+.DS_Store
