@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct RoundedCornersShape: Shape {
 	let corners: UIRectCorner
@@ -51,7 +52,8 @@ struct NewTODOView: View {
 	@State private var title:String = ""
 	@State private var description:String = ""
 	@State private var date:Date? = nil
-	@State private var file:String = ""
+	@State private var file:PhotosPickerItem?
+	@State private var fileData:Data?
 	
 	func checkAndSaveNote() {
 		homeViewModel.createNewNote(title: title, description: description, deadline: date){ result in
@@ -105,7 +107,7 @@ struct NewTODOView: View {
 							RoundedRectangle(cornerRadius: 12)
 								.strokeBorder(.white,lineWidth: 2)
 						}
-						.frame(minHeight: 200, maxHeight: .infinity)
+						.frame(minHeight: 175 )
 				}
 				ZStack(alignment:.leading){
 					if date == nil {
@@ -126,28 +128,48 @@ struct NewTODOView: View {
 							.strokeBorder(.white.opacity( date == nil ? 0.5 : 1),lineWidth: 2)
 					}
 				}
-				ZStack(alignment:.leading){
-					if title.isEmpty {
-							VFont("Add Image (Optional)",type:.b1)
-							.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
-								.offset(x:16)
+				VStack{
+					
+					PhotosPicker(selection: $file,matching: .any(of: [.images,.not(.livePhotos)])) {
+						VStack{
+							
+							if fileData != nil {
+								let image = UIImage(data: fileData!)
+								Image(uiImage: image!)
+									.resizable()
+									.scaledToFill()
+									.frame(height: (125 - 16))
+									.frame(maxWidth: .infinity)
+									.clipped()
+									.cornerRadius(12)
+									.padding(.horizontal,8)
+										
+							}else{
+								VIcons(name:.photo,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
+									VFont("Add Image (Optional)",type:.b1)
+									.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
+										.offset(x:16)
+								
+							}
+						}
+						.frame(height: 125)
+						.frame(maxWidth: .infinity)
+						 
+					}.onChange(of: file) { newItem in
+						Task {
+								 if let data = try? await newItem?.loadTransferable(type: Data.self) {
+									 fileData = data
+								 }
+						 }
 					}
 					
-					HStack{
-						TextField("", text: $file)
-							.accentColor(.white)
-							.frame(height: 48)
-							.foregroundColor(.white)
-							.font(.custom("Montserrat", size: 16))
-							.tint(.white)
-						VIcons(name:.photo,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
-					}
-					.padding(.horizontal,16)
-					.background {
-						RoundedRectangle(cornerRadius: 12)
-							.strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
-					}
 				}
+				.background {
+					RoundedRectangle(cornerRadius: 12)
+						 .strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
+						 
+				 }
+				
 				VButton("ADD TODO",type: .secondary,  action: {
 					checkAndSaveNote()
 				},ref:buttonRef)

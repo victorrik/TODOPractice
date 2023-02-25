@@ -28,12 +28,18 @@ extension AnyTransition {
 			removal: .move(edge: .leading)
 		)
 	}
+	static var bottomslide: AnyTransition {
+		AnyTransition.asymmetric(
+			insertion: .move(edge: .bottom),
+			removal: .move(edge: .bottom).combined(with: .opacity.animation(.easeOut.delay(0.25)))
+		)
+	}
 }
 
 extension View {
-		func hideKeyboard() {
-				UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-		}
+	func hideKeyboard() {
+		UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+	}
 }
 
 
@@ -92,11 +98,11 @@ struct TODOLISTApp: App {
 		FirebaseApp.configure()
 		#if DEVELOPMENT
 				print(
-			 """
-			 *********
-			 DEVELOPMENT MODE IS ON
-			 *********
-			 """
+				"""
+				*********
+				DEVELOPMENT MODE IS ON
+				*********
+				"""
 				)
 				Auth.auth().useEmulator(withHost:"192.168.100.37", port:4009)
 				//Functions.functions().useEmulator(withHost:"192.168.100.37", port:5008)
@@ -107,11 +113,11 @@ struct TODOLISTApp: App {
 				Firestore.firestore().settings = settings
 		#elseif DEBUG
 				print(
-			 """
-			 *********
-			 DEBUGGIN MODE IS ON
-			 *********
-			 """
+				"""
+				*********
+				DEBUGGIN MODE IS ON
+				*********
+				"""
 				)
 		#else
 				print(
