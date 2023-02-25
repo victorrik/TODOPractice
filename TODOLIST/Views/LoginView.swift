@@ -38,6 +38,7 @@ struct LoginView: View {
 			}
 			return
 		}
+		self.hideKeyboard()
 		print("Usuario logeado->\(userSigned.uid)")
 		withAnimation(.easeOut(duration: 0.32)) {
 			userModel.userIsLogged = true
@@ -52,7 +53,13 @@ struct LoginView: View {
 				.frame(width: 187)
 				.frame(minHeight: 187 / 2)
 				.padding(.top,50)
+				.onTapGesture {
+					self.hideKeyboard()
+				}
 			Spacer()
+				.onTapGesture {
+					self.hideKeyboard()
+				}
 			VStack(spacing: 16){
 				VInput(value: $email,
 								labelPlaceholder: "Email",

@@ -6,7 +6,15 @@
 //
 
 import SwiftUI
-
+struct TestVTextAreaView: View {
+	var body : some View{
+		VStack{
+			VTextArea(value: .constant("meow meow"))
+				.background(Color.red)
+				.foregroundColor(.white)
+		}
+	}
+}
 struct VTextArea: View {
 	
 	@Binding var value:String
@@ -29,11 +37,11 @@ struct VTextArea: View {
 		// rename body to mainView
 		var mainView: some View {
 				TextEditor(text: $value)
+				.frame(minHeight: 200)
 		}
 }
 
 struct VTextArea_Previews: PreviewProvider {
     static var previews: some View {
-			VTextArea(value:.constant(""))
-    }
+			TestVTextAreaView()    }
 }

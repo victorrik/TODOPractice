@@ -62,7 +62,7 @@ struct VFirestore {
 		let docRef = self.createRef(firebasePath) as! CollectionReference
 	 
 		do{
-			let meow = try docRef.addDocument(data: data)
+			let meow = try await docRef.addDocument(data: data)
 		 
 			rtResult.succes = true
 				 

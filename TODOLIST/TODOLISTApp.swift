@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import Firebase
 //import FirebaseCore
 import FirebaseAuth
@@ -26,6 +27,35 @@ extension AnyTransition {
 			insertion: .move(edge: .trailing),
 			removal: .move(edge: .leading)
 		)
+	}
+}
+
+extension View {
+		func hideKeyboard() {
+				UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+		}
+}
+
+
+struct VError {
+	var message:String
+	var code:String
+	init(error:Error) {
+		
+		self.message = error.localizedDescription
+		self.code = "meow"
+	}
+}
+
+struct VResult<InfoResult>{
+	let succes: Bool
+	let info: InfoResult?
+	let fail:VError?
+	
+	init(succes: Bool = false,info: InfoResult? = nil, fail: VError? = nil ) {
+		self.succes = succes
+		self.info = info
+		self.fail = fail
 	}
 }
 
@@ -51,6 +81,7 @@ enum Configuration {
 		}
 	}
 }
+
 
 @main
 struct TODOLISTApp: App {

@@ -26,7 +26,7 @@ struct VFont: View {
 		case .h1, .h2, .h3, .h4 :
 			return "Bebas neue"
 		default:
-			return "Monserrat"
+			return "Montserrat"
 		}
 	}
 	

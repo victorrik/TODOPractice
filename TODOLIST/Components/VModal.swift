@@ -49,7 +49,6 @@ struct VModal<Content: View>: View {
 				.padding(16)
 				.shadow(color: .black.opacity(0.2),
 								radius: 22, x: 8, y: 16)
-				
 				.transition(.move(edge: .bottom).combined(with: .opacity))
 			}
 		}
