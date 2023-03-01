@@ -40,6 +40,7 @@
 		59764754299D9F87003BE0A7 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 59764751299D9F87003BE0A7 /* Development.xcconfig */; };
 		59764756299DA094003BE0A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59764755299DA094003BE0A7 /* GoogleService-Info.plist */; };
 		59851E1229A524B60056C8E0 /* VDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59851E1129A524B60056C8E0 /* VDatePicker.swift */; };
+		59C7A30A29AC872B00D1DA2D /* TestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C7A30929AC872B00D1DA2D /* TestsView.swift */; };
 		59DB946329A32A5100A811B8 /* LargeModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DB946229A32A5100A811B8 /* LargeModal.swift */; };
 		59EE3A5729A1C70D007F6C59 /* NoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EE3A5629A1C70D007F6C59 /* NoteModel.swift */; };
 		59EE3A5A29A1C7E6007F6C59 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EE3A5929A1C7E5007F6C59 /* HomeViewModel.swift */; };
@@ -100,6 +101,7 @@
 		59764755299DA094003BE0A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		59764757299DA179003BE0A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59851E1129A524B60056C8E0 /* VDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VDatePicker.swift; sourceTree = "<group>"; };
+		59C7A30929AC872B00D1DA2D /* TestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsView.swift; sourceTree = "<group>"; };
 		59DB946229A32A5100A811B8 /* LargeModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeModal.swift; sourceTree = "<group>"; };
 		59EE3A5629A1C70D007F6C59 /* NoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteModel.swift; sourceTree = "<group>"; };
 		59EE3A5929A1C7E5007F6C59 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				59DB946229A32A5100A811B8 /* LargeModal.swift */,
 				59851E1129A524B60056C8E0 /* VDatePicker.swift */,
 				5934853A29A9C15400279076 /* VImagePicker.swift */,
+				59C7A30929AC872B00D1DA2D /* TestsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -257,7 +260,7 @@
 				595458F5299DE184008D514B /* SignUpView.swift */,
 				595458F7299DE567008D514B /* SwitchLoginSignupView.swift */,
 				595458F9299DE7AC008D514B /* ForgotPasswordView.swift */,
-				59EE3A5829A1C7CC007F6C59 /* Home */,
+				59EEB61E299EC6CD0065FD77 /* HomeView.swift */,
 				59EEB620299EC7280065FD77 /* NewTODOView.swift */,
 				59EEB622299EC7370065FD77 /* DetailView.swift */,
 				59213DAE299F5294005B88E6 /* ProfileView.swift */,
@@ -265,20 +268,12 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		59EE3A5829A1C7CC007F6C59 /* Home */ = {
-			isa = PBXGroup;
-			children = (
-				59EEB61E299EC6CD0065FD77 /* HomeView.swift */,
-				59EE3A5929A1C7E5007F6C59 /* HomeViewModel.swift */,
-			);
-			path = Home;
-			sourceTree = "<group>";
-		};
 		59EEB624299ECE600065FD77 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				59EEB625299ECE700065FD77 /* UserModel.swift */,
 				59EE3A5629A1C70D007F6C59 /* NoteModel.swift */,
+				59EE3A5929A1C7E5007F6C59 /* HomeViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -452,6 +447,7 @@
 				595458F6299DE184008D514B /* SignUpView.swift in Sources */,
 				59EEB621299EC7280065FD77 /* NewTODOView.swift in Sources */,
 				5971434F29A07F08007E0551 /* VModal.swift in Sources */,
+				59C7A30A29AC872B00D1DA2D /* TestsView.swift in Sources */,
 				595458FA299DE7AC008D514B /* ForgotPasswordView.swift in Sources */,
 				59EEB623299EC7370065FD77 /* DetailView.swift in Sources */,
 				59764708299D976A003BE0A7 /* TODOLISTApp.swift in Sources */,

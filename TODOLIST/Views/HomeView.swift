@@ -7,14 +7,28 @@
 
 import SwiftUI
 import FirebaseFirestore
+
+ 
+
+extension View {
+	func noteStyle (
+		backgroundColor: Color
+	) -> some View {
+		self
+			.padding(.vertical, 8)
+			.padding(.leading, 16)
+			.padding(.trailing, 10)
+			.background{
+			 backgroundColor
+				}
+		 .cornerRadius(12)
+			
+		}
+}
+
 struct NoteCell: View {
 	let note: NoteModel
-	
-	func formatDate(date:Timestamp) -> String {
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "d MMM YYYY HH:mm:ss"
-		return dateFormatter.string(from: date.dateValue())
-	}
+	 
 	var body: some View{
 		HStack(spacing:8){
 			VStack(alignment:.leading,spacing: 8){
@@ -23,12 +37,13 @@ struct NoteCell: View {
 					.font(.custom("Montserrat", size: 16) )
 					.lineLimit(1)
 				
-				Text(note.description)
-					.font(.custom("Montserrat", size: 14) )
-					.multilineTextAlignment(.leading)
-					.lineLimit(2)
-					
-				Text("Created at \(formatDate(date:note.createdAt!))")
+				HStack{
+					Text(note.description)
+						.font(.custom("Montserrat", size: 14) )
+						.multilineTextAlignment(.leading)
+						.lineLimit(2)
+				}
+				Text(note.createdDate())
 					.font(.custom("Montserrat", size: 11))
 			}
 			.foregroundColor(.white)
@@ -37,25 +52,62 @@ struct NoteCell: View {
 			VStack{
 				VIcons(name: .clock,color: .white, size: 20)
 				Spacer()
+				if note.file != nil {
+					AsyncImage(url: note.getURLImage() ) { image in
+						image
+							.resizable()
+							.scaledToFill()
+							.frame(width:60,height: 40)
+							.clipped()
+							.cornerRadius(8)
+					} placeholder: {
+						VStack{
+							ProgressView()
+								.progressViewStyle(CircularProgressViewStyle(tint: .white))
+						}
+						.frame(width:50,height: 50)
+						.background {
+							Color.white.opacity(0.2)
+						}
+						.cornerRadius(8)
+					}
+				}
 			}
-			
 		}
-		.padding(.vertical, 8)
-		.padding(.leading, 16)
-		.padding(.trailing, 10)
+		.noteStyle(backgroundColor: note.urgentColor())
 		.listRowSeparator(.hidden)
-		.background{
-			if note.urgentLevel == .high {
-				Color.pink
-			} else if note.urgentLevel == .normal{
-				Color.VF76C6A
-			}else {
-				Color.VF79E89
-			}
-		}
-		.cornerRadius(12)
+		
+		
 	}
 }
+
+struct EmptyNoteCell:View{
+	var body: some View{
+		HStack{
+			VStack(alignment:.leading,spacing: 8){
+				Text("note.title")
+					.fontWeight(.semibold)
+					.font(.custom("Montserrat", size: 16) )
+					.lineLimit(1)
+				
+				HStack{
+					Text("note.description")
+						.font(.custom("Montserrat", size: 14) )
+						.multilineTextAlignment(.leading)
+						.lineLimit(2)
+				}
+				Text("note.createdDate()")
+					.font(.custom("Montserrat", size: 11))
+			}
+			.foregroundColor(.VF76C6A)
+			Spacer()
+		}
+		.noteStyle(backgroundColor: Color.VF76C6A)
+		.listRowSeparator(.hidden)
+	}
+}
+
+
 struct HomeView: View {
 	@State var showNewTODO: Bool = false;
 	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
@@ -75,20 +127,29 @@ struct HomeView: View {
 							.font(.system(size: 20,weight: .medium))
 					}
 					
-					List(homeViewModel.notes, id: \.id){ note in
-						NoteCell(note: note)
-						.listRowInsets(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
-						.swipeActions(edge: .trailing) {
-							Button(action: {
-								print("deletamos")
-							}, label: {
-								VIcons(name: .trash, color: .white, size: 24)
-							})
-							.tint(.red)
+					if homeViewModel.loadingNotes {
+						VStack{
+							EmptyNoteCell()
+							EmptyNoteCell()
+							EmptyNoteCell()
+							Spacer()
 						}
-						
+					}else{
+						List(homeViewModel.notes, id: \.id){ note in
+							NoteCell(note: note)
+							.listRowInsets(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
+							.swipeActions(edge: .trailing) {
+								Button(action: {
+									print("deletamos")
+								}, label: {
+									VIcons(name: .trash, color: .white, size: 24)
+								})
+								.tint(.red)
+							}
+							
+						}
+						.listStyle(.plain)
 					}
-					.listStyle(.plain)
 					
 					HStack{
 						Spacer()
@@ -131,9 +192,7 @@ struct HomeView: View {
 									homeViewModel: homeViewModel)
 		}
 		.onAppear{
-			Task{
-				await homeViewModel.getAllNotes()
-			}
+			homeViewModel.getAllNotes()
 		}
 	}
 }

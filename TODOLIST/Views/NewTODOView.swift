@@ -6,20 +6,9 @@
 //
 
 import SwiftUI
-import PhotosUI
 
-struct RoundedCornersShape: Shape {
-	let corners: UIRectCorner
-	let radius: CGFloat
-	
-	func path(in rect: CGRect) -> Path {
-		let path = UIBezierPath(roundedRect: rect,
-														byRoundingCorners: corners,
-														cornerRadii: CGSize(width: radius, height: radius))
-		return Path(path.cgPath)
-	}
-}
-struct BackNewTODOView: View {
+
+struct TestingNewTODOView: View {
 	@State var isShowing:Bool = true
 	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
 	
@@ -37,26 +26,56 @@ struct BackNewTODOView: View {
 		}
 	}
 }
-/**
- .onTapGesture {
- withAnimation(.linear(duration: 0.1)){
- curHeight = minHeight
- }
- //isShowing = false
- }
- */
+
+struct RoundedCornersShape: Shape {
+	let corners: UIRectCorner
+	let radius: CGFloat
+	
+	func path(in rect: CGRect) -> Path {
+		let path = UIBezierPath(roundedRect: rect,
+														byRoundingCorners: corners,
+														cornerRadii: CGSize(width: radius, height: radius))
+		return Path(path.cgPath)
+	}
+}
+
+
+extension View {
+	func placeholder<Content: View>(
+		when shouldShow: Bool,
+		alignment: Alignment = .leading,
+		@ViewBuilder placeholder: () -> Content) -> some View {
+			
+			ZStack(alignment: alignment) {
+				placeholder().opacity(shouldShow ? 1 : 0)
+				self
+			}
+		}
+}
+
+
 struct NewTODOView: View {
 	@Binding var isShowing:Bool
+	
 	@ObservedObject var homeViewModel:HomeViewModel
 	@ObservedObject var buttonRef = VButtonRef()
 	@State private var title:String = ""
 	@State private var description:String = ""
+	@State private var urgentLevel:UrgentLevels = .normal
 	@State private var date:Date? = nil
-	@State private var file:PhotosPickerItem?
-	@State private var fileData:Data?
+	@StateObject var file = VImagePickerModel()
+	@State private var enabled = false
+	
 	
 	func checkAndSaveNote() {
-		homeViewModel.createNewNote(title: title, description: description, deadline: date){ result in
+		buttonRef.handleLoading(true)
+		homeViewModel.createNewNote(title: title,
+																description: description,
+																urgentLevel:urgentLevel,
+																deadline: date,
+																file: file.imageData
+		){ result in
+			buttonRef.handleLoading(false)
 			if !result.succes{
 				return
 			}
@@ -69,106 +88,112 @@ struct NewTODOView: View {
 	var body: some View {
 		LargeModal(isShowing: $isShowing){
 			ScrollView{
-				ZStack(alignment:.leading){
-					if title.isEmpty {
+				TextField("", text: $title)
+					.accentColor(.white)
+					.frame(height: 48)
+					.foregroundColor(.white)
+					.font(.custom("Montserrat", size: 16))
+					.tint(.white)
+					.placeholder(when: title.isEmpty) {
 						VFont("Title",type:.b1)
 							.foregroundColor(.white)
-							.offset(x:16)
-					}
-					
-					VStack{
-						TextField("", text: $title)
-							.accentColor(.white)
-							.frame(height: 48)
-							.foregroundColor(.white)
-							.font(.custom("Montserrat", size: 16))
-							.tint(.white)
 					}
 					.padding(.horizontal,16)
 					.background {
 						RoundedRectangle(cornerRadius: 12)
 							.strokeBorder(.white,lineWidth: 2)
 					}
-				}
 				
-				ZStack(alignment: .topLeading){
-					if description.isEmpty{
+				VTextArea(value: $description)
+					.accentColor(.white)
+					.placeholder(when: description.isEmpty, alignment: .topLeading) {
 						VFont("Description",type:.b1)
 							.foregroundColor(.white)
-							.offset(x:16,y:16)
+							.offset(x:6,y:8)
 					}
-					
-					VTextArea(value: $description)
-						.accentColor(.white)
-						.padding(8)
-						.foregroundColor(.white)
-						.font(.custom("Montserrat", size: 16))
-						.background {
-							RoundedRectangle(cornerRadius: 12)
-								.strokeBorder(.white,lineWidth: 2)
-						}
-						.frame(minHeight: 175 )
-				}
-				ZStack(alignment:.leading){
-					if date == nil {
-							VFont("Deadline (Optional)",type:.b1)
-							.foregroundColor(.white.opacity( date == nil ? 0.5 : 1))
-								.offset(x:16)
+					.padding(8)
+					.foregroundColor(.white)
+					.font(.custom("Montserrat", size: 16))
+					.background {
+						RoundedRectangle(cornerRadius: 12)
+							.strokeBorder(.white,lineWidth: 2)
 					}
-					
+					.frame(minHeight: 150 )
+				
+				
+				HStack(spacing:16){
 					HStack{
 						VDatePicker(date: $date,placeHolder: "")
 							.frame(height: 48)
 							.foregroundColor(.white)
 						VIcons(name:.calendar,color: .white.opacity( date == nil ? 0.5 : 1), size: 24)
 					}
+					.placeholder(when: date == nil, placeholder: {
+						VFont("Deadline (Optional)",type:.b1)
+							.foregroundColor(.white.opacity( date == nil ? 0.5 : 1))
+					})
 					.padding(.horizontal,16)
 					.background {
 						RoundedRectangle(cornerRadius: 12)
 							.strokeBorder(.white.opacity( date == nil ? 0.5 : 1),lineWidth: 2)
 					}
-				}
-				VStack{
 					
-					PhotosPicker(selection: $file,matching: .any(of: [.images,.not(.livePhotos)])) {
-						VStack{
-							
-							if fileData != nil {
-								let image = UIImage(data: fileData!)
-								Image(uiImage: image!)
-									.resizable()
-									.scaledToFill()
-									.frame(height: (125 - 16))
-									.frame(maxWidth: .infinity)
-									.clipped()
-									.cornerRadius(12)
-									.padding(.horizontal,8)
-										
-							}else{
-								VIcons(name:.photo,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
-									VFont("Add Image (Optional)",type:.b1)
-									.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
-										.offset(x:16)
-								
+					Menu(content: {
+						Picker(selection: $urgentLevel,label: EmptyView() ){
+							ForEach(UrgentLevels.allCases, id: \.self) { value in
+								Text(value.rawValue).tag(value)
 							}
 						}
-						.frame(height: 125)
-						.frame(maxWidth: .infinity)
-						 
-					}.onChange(of: file) { newItem in
-						Task {
-								 if let data = try? await newItem?.loadTransferable(type: Data.self) {
-									 fileData = data
-								 }
-						 }
+					},label: {
+						HStack(spacing:5){
+							Text("Level:")
+								.font(.custom("Montserrat", size: 16))
+							
+							Text(urgentLevel.rawValue)
+								.fontWeight(.semibold)
+								.font(.custom("Montserrat", size: 16))
+								.frame(maxWidth: .infinity)
+								
+						}
+						.padding(.horizontal,10)
+						.foregroundColor(.white)
+						.frame(width: 130, height: 48)
+						
+					})
+					.background {
+						RoundedRectangle(cornerRadius: 12)
+							.strokeBorder(.white ,lineWidth: 2)
+					}
+				}
+				VStack{
+					VImagePicker(value: file ){
+						if file.image != nil {
+							Image(uiImage: file.image!)
+								.resizable()
+								.scaledToFill()
+								.frame(height: (125 - 8))
+								.frame(maxWidth: .infinity)
+								.clipped()
+								.cornerRadius(6)
+								.padding(.horizontal,4)
+							
+						}else{
+							VIcons(name:.photo,color: .white.opacity( title.isEmpty ? 0.5 : 1), size: 24)
+							VFont("Add Image (Optional)",type:.b1)
+								.foregroundColor(.white.opacity( title.isEmpty ? 0.5 : 1))
+								.offset(x:16)
+							
+						}
+					}
+					.frame(height: 125)
+					.frame(maxWidth: .infinity)
+					.background {
+						RoundedRectangle(cornerRadius: 12)
+							.strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
+						
 					}
 					
 				}
-				.background {
-					RoundedRectangle(cornerRadius: 12)
-						 .strokeBorder(.white.opacity( title.isEmpty ? 0.5 : 1),lineWidth: 2)
-						 
-				 }
 				
 				VButton("ADD TODO",type: .secondary,  action: {
 					checkAndSaveNote()
@@ -182,6 +207,6 @@ struct NewTODOView: View {
 
 struct NewTODOView_Previews: PreviewProvider {
 	static var previews: some View {
-		BackNewTODOView()
+		TestingNewTODOView()
 	}
 }

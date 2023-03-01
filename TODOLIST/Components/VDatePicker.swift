@@ -73,8 +73,7 @@ struct VDatePicker: View {
 					.frame(maxWidth: .infinity,maxHeight: .infinity)
 					.foregroundColor(.white.opacity(0.00001))
 			}
-		}
-		.frame(maxWidth: .infinity)
+		} 
 		.onAppear{
 			valuatingExternalDate()
 		}
