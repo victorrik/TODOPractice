@@ -28,6 +28,12 @@ extension AnyTransition {
 			removal: .move(edge: .leading)
 		)
 	}
+	static var navigationSlide: AnyTransition {
+		AnyTransition.asymmetric(
+			insertion: .move(edge: .trailing),
+			removal:  .offset(x:  -(UIScreen.main.bounds.size.width * 0.33) )
+		)
+	}
 	static var bottomslide: AnyTransition {
 		AnyTransition.asymmetric(
 			insertion: .move(edge: .bottom),

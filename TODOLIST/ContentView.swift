@@ -47,6 +47,7 @@ struct ContentView: View {
 					.navigationViewStyle(StackNavigationViewStyle())
 					.navigationBarHidden(true)
 					.transition(.backslide)
+					.navigationViewStyle(.stack)
 				}else{
 					VStack{
 						Image("todo")
