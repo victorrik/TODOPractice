@@ -5,10 +5,7 @@
 //  Created by Victor Andres Marcial on 16/02/23.
 //
 
-import SwiftUI
-import FirebaseFirestore
-
- 
+import SwiftUI 
 
 extension View {
 	func noteStyle (
@@ -19,16 +16,16 @@ extension View {
 			.padding(.leading, 16)
 			.padding(.trailing, 10)
 			.background{
-			 backgroundColor
-				}
-		 .cornerRadius(12)
-			
-		}
+				backgroundColor
+			}
+			.cornerRadius(12)
+		
+	}
 }
 
 struct NoteCell: View {
 	let note: NoteModel
-	 
+	
 	var body: some View{
 		HStack(spacing:8){
 			VStack(alignment:.leading,spacing: 8){
@@ -80,29 +77,15 @@ struct NoteCell: View {
 		
 	}
 }
+ 
+
 
 struct EmptyNoteCell:View{
+	let phase: CGFloat = 0
 	var body: some View{
-		HStack{
-			VStack(alignment:.leading,spacing: 8){
-				Text("note.title")
-					.fontWeight(.semibold)
-					.font(.custom("Montserrat", size: 16) )
-					.lineLimit(1)
-				
-				HStack{
-					Text("note.description")
-						.font(.custom("Montserrat", size: 14) )
-						.multilineTextAlignment(.leading)
-						.lineLimit(2)
-				}
-				Text("note.createdDate()")
-					.font(.custom("Montserrat", size: 11))
-			}
-			.foregroundColor(.VF76C6A)
-			Spacer()
-		}
-		.noteStyle(backgroundColor: Color.VF76C6A)
+		VShrimmer(centerColor: .VF76C6A.opacity(0.8),edgeColor: .VF76C6A)
+			.frame(height: 100)
+			.cornerRadius(12)
 		.listRowSeparator(.hidden)
 	}
 }
@@ -111,6 +94,7 @@ struct EmptyNoteCell:View{
 struct HomeView: View {
 	@State var showNewTODO: Bool = false;
 	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
+	let emptyLoad = Array(0...10)
 	var body: some View {
 		ZStack{
 			NavigationView{
@@ -128,24 +112,24 @@ struct HomeView: View {
 					}
 					
 					if homeViewModel.loadingNotes {
-						VStack{
-							EmptyNoteCell()
-							EmptyNoteCell()
-							EmptyNoteCell()
-							Spacer()
+						List{
+							ForEach(emptyLoad,id:\.self) { data in
+								EmptyNoteCell()
+							}
 						}
+						.listStyle(.plain)
 					}else{
 						List(homeViewModel.notes, id: \.id){ note in
 							NoteCell(note: note)
-							.listRowInsets(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
-							.swipeActions(edge: .trailing) {
-								Button(action: {
-									print("deletamos")
-								}, label: {
-									VIcons(name: .trash, color: .white, size: 24)
-								})
-								.tint(.red)
-							}
+								.listRowInsets(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
+								.swipeActions(edge: .trailing) {
+									Button(action: {
+										print("deletamos")
+									}, label: {
+										VIcons(name: .trash, color: .white, size: 24)
+									})
+									.tint(.red)
+								}
 							
 						}
 						.listStyle(.plain)
@@ -202,8 +186,5 @@ struct HomeView_Previews: PreviewProvider {
 		HomeView()
 			.previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro Max"))
 			.previewDisplayName("iPhone 14 Pro Max")
-		HomeView()
-			.previewDevice(PreviewDevice(rawValue: "iPhoneTanquesito"))
-			.previewDisplayName("iPhone SE")
 	}
 }
