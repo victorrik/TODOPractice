@@ -59,7 +59,7 @@ struct NewTODOView: View {
 	
 	@ObservedObject var homeViewModel:HomeViewModel
 	@ObservedObject var buttonRef = VButtonRef()
-	@State private var title:String = ""
+	@State private var  title:String = ""
 	@State private var description:String = ""
 	@State private var urgentLevel:UrgentLevels = .normal
 	@State private var date:Date? = nil
@@ -80,6 +80,14 @@ struct NewTODOView: View {
 				return
 			}
 			isShowing = false
+			title = ""
+			description = ""
+			urgentLevel = .normal
+			date = nil
+			file.image = nil
+			
+			
+			enabled = false
 			print("result->\(result)")
 		}
 		

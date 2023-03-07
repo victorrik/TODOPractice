@@ -46,7 +46,7 @@ struct NoteCell: View {
 			.foregroundColor(.white)
 			Spacer()
 			
-			VStack{
+			VStack(alignment:.trailing){
 				VIcons(name: .clock,color: .white, size: 20)
 				Spacer()
 				if note.file != nil {
@@ -54,7 +54,7 @@ struct NoteCell: View {
 						image
 							.resizable()
 							.scaledToFill()
-							.frame(width:60,height: 40)
+							.frame(width:50,height: 50)
 							.clipped()
 							.cornerRadius(8)
 					} placeholder: {
@@ -73,7 +73,6 @@ struct NoteCell: View {
 		}
 		.noteStyle(backgroundColor: note.urgentColor())
 		.listRowSeparator(.hidden)
-		
 		
 	}
 }
@@ -98,61 +97,81 @@ struct HomeView: View {
 	var body: some View {
 		ZStack{
 			NavigationView{
-				VStack{
-					HStack(alignment: .center){
-						Image("logosimplerojo")
-							.resizable()
-							.aspectRatio(contentMode: .fit)
-							.frame(width: 25)
-						VFont("List of todo",type: .h3)
-							.foregroundColor(.VF76C6A)
-						Spacer()
-						VIcons(name: .lineDecreaseCircle,color: .VF76C6A, size: 30)
-							.font(.system(size: 20,weight: .medium))
-					}
-					
-					if homeViewModel.loadingNotes {
-						List{
-							ForEach(emptyLoad,id:\.self) { data in
-								EmptyNoteCell()
-							}
+				ZStack{
+					VStack{
+						HStack(alignment: .center){
+							Image("logosimplerojo")
+								.resizable()
+								.aspectRatio(contentMode: .fit)
+								.frame(width: 25)
+							VFont("List of todo",type: .h3)
+								.foregroundColor(.VF76C6A)
+							Spacer()
+							VIcons(name: .lineDecreaseCircle,color: .VF76C6A, size: 30)
+								.font(.system(size: 20,weight: .medium))
 						}
-						.listStyle(.plain)
-					}else{
-						List(homeViewModel.notes, id: \.id){ note in
-							NoteCell(note: note)
-								.listRowInsets(.init(top: 8, leading: 0, bottom: 8, trailing: 0))
-								.swipeActions(edge: .trailing) {
-									Button(action: {
-										print("deletamos")
-									}, label: {
-										VIcons(name: .trash, color: .white, size: 24)
-									})
-									.tint(.red)
+						.padding(.top)
+						.padding(.horizontal)
+						
+						if homeViewModel.loadingNotes {
+							List{
+								ForEach(emptyLoad,id:\.self) { data in
+									EmptyNoteCell()
+										.listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+										.padding(.horizontal)
+									 .padding(.vertical, 8)
 								}
+							}
+							.listStyle(.plain)
+						}else{
 							
+							List{
+								ForEach(homeViewModel.notes, id: \.id) { note  in
+									NoteCell(note: note)
+										.listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+										.padding(.horizontal)
+										.padding(.vertical, 8)
+										.padding(.bottom,homeViewModel.notes.last?.id == note.id ? 70 : 0)
+										.swipeActions(edge: .trailing) {
+											Button(action: {
+												print("deletamos")
+											}, label: {
+												VIcons(name: .trash, color: .white, size: 24)
+											})
+											.tint(.red)
+										}
+										.background{
+											NavigationLink("",destination: DetailView(noteInfo: note))
+												.buttonStyle(.plain)
+												.opacity(0)
+										}
+								}
+							}
+							.listStyle(.plain)
 						}
-						.listStyle(.plain)
 					}
 					
-					HStack{
+					VStack{
 						Spacer()
-						Button(action: {
-							showNewTODO = true
-						}, label: {
-							VStack{
-								VIcons(name:.plus,color: .white, size: 35)
-									.font(.system(size: 20,weight: .medium))
+						HStack{
+							Spacer()
+							Button(action: {
+								showNewTODO = true
+							}, label: {
+								VStack{
+									VIcons(name:.plus,color: .white, size: 35)
+										.font(.system(size: 20,weight: .medium))
+									
+								}
+								.frame(width: 60,height: 60)
+								.background(Color.VF76C6A)
+								.cornerRadius(100)
 								
-							}
-							.frame(width: 60,height: 60)
-							.background(Color.VF76C6A)
-							.cornerRadius(100)
-							
-						})
+							})
+						}
 					}
+					.padding(.trailing)
 				}
-				.padding()
 				.toolbar {
 					
 					ToolbarItem(placement:ToolbarItemPlacement.navigationBarLeading) {
@@ -165,9 +184,7 @@ struct HomeView: View {
 								.font(.system(size: 20,weight: .medium))
 						})
 					}
-					
 				}
-				//.navigationTitle("meow")
 				.navigationBarTitleDisplayMode(.inline)
 				.navigationViewStyle(.stack)
 				

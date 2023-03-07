@@ -62,13 +62,16 @@ struct NoteModel: Identifiable, Codable   {
 		case file
 	}
 	
-	func getDateFormated(value:Timestamp) -> String {
+	private func getDateFormated(value:Timestamp) -> String {
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateFormat = "d MMM YYYY HH:mm:ss"
 			return dateFormatter.string(from: value.dateValue())
 	}
 	
 	func createdDate() -> String {
+		if createdAt == nil {
+			return "Created at \(Date().formatted())"
+		}
 		return "Created at \(self.getDateFormated(value: createdAt!))"
 	}
 	
