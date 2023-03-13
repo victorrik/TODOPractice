@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-
+enum Meow {
+	case ratas
+}
 struct TestingNewTODOView: View {
 	@State var isShowing:Bool = true
 	@ObservedObject var homeViewModel:HomeViewModel = HomeViewModel()
@@ -96,6 +98,7 @@ struct NewTODOView: View {
 	var body: some View {
 		LargeModal(isShowing: $isShowing){
 			ScrollView{
+				
 				TextField("", text: $title)
 					.accentColor(.white)
 					.frame(height: 48)

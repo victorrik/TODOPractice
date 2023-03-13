@@ -143,8 +143,34 @@ class HomeViewModel: ObservableObject {
 		
 	}
 	
-	func deleteNote() {
+	func deleteNote(note:NoteModel, completionBlock: @escaping (VResult<Bool>) -> Void ) {
+		let auxFile = note.file
+		if auxFile != nil {
+			let desertRef = storageRef.child(auxFile!.path!)
+
+			// Delete the file
+			desertRef.delete { error in
+				if let error = error {
+					 print("Error al eliminar el archivo\(error)")
+					// Uh-oh, an error occurred!
+				} else {
+					// File deleted successfully
+				}
+			}
+		}
 		
+		db.document(note.id!).delete() { err in
+				if let err = err {
+					completionBlock(.init(fail: .init(error: err)))
+						print("Error removing document: \(err)")
+				} else {
+					completionBlock(.init(succes: true))
+					if let index = self.notes.firstIndex(of: note) {
+						self.notes.remove(at: index)
+					}
+						print("Document successfully removed!")
+				}
+		}
 	}
 	
 }

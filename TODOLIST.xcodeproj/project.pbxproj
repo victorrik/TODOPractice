@@ -40,6 +40,7 @@
 		59764754299D9F87003BE0A7 /* Development.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 59764751299D9F87003BE0A7 /* Development.xcconfig */; };
 		59764756299DA094003BE0A7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59764755299DA094003BE0A7 /* GoogleService-Info.plist */; };
 		59851E1229A524B60056C8E0 /* VDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59851E1129A524B60056C8E0 /* VDatePicker.swift */; };
+		5998FCCC29BE7D9E00EDDEE3 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5998FCCB29BE7D9E00EDDEE3 /* NoteCell.swift */; };
 		59C7A30A29AC872B00D1DA2D /* TestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C7A30929AC872B00D1DA2D /* TestsView.swift */; };
 		59D75B6D29B308AE00772F4F /* VShrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D75B6C29B308AE00772F4F /* VShrimmer.swift */; };
 		59DB946329A32A5100A811B8 /* LargeModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DB946229A32A5100A811B8 /* LargeModal.swift */; };
@@ -102,6 +103,7 @@
 		59764755299DA094003BE0A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		59764757299DA179003BE0A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		59851E1129A524B60056C8E0 /* VDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VDatePicker.swift; sourceTree = "<group>"; };
+		5998FCCB29BE7D9E00EDDEE3 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		59C7A30929AC872B00D1DA2D /* TestsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsView.swift; sourceTree = "<group>"; };
 		59D75B6C29B308AE00772F4F /* VShrimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VShrimmer.swift; sourceTree = "<group>"; };
 		59DB946229A32A5100A811B8 /* LargeModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeModal.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				5934853A29A9C15400279076 /* VImagePicker.swift */,
 				59C7A30929AC872B00D1DA2D /* TestsView.swift */,
 				59D75B6C29B308AE00772F4F /* VShrimmer.swift */,
+				5998FCCB29BE7D9E00EDDEE3 /* NoteCell.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 				59213DAF299F5294005B88E6 /* ProfileView.swift in Sources */,
 				59764737299D97F4003BE0A7 /* VButton.swift in Sources */,
 				59851E1229A524B60056C8E0 /* VDatePicker.swift in Sources */,
+				5998FCCC29BE7D9E00EDDEE3 /* NoteCell.swift in Sources */,
 				59EEB626299ECE700065FD77 /* UserModel.swift in Sources */,
 				595458F6299DE184008D514B /* SignUpView.swift in Sources */,
 				59EEB621299EC7280065FD77 /* NewTODOView.swift in Sources */,

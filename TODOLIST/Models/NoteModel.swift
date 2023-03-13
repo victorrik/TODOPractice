@@ -41,7 +41,11 @@ struct VFiles: Codable{
 	var data:Data?
 }
 
-struct NoteModel: Identifiable, Codable   {
+struct NoteModel: Identifiable, Codable, Equatable  {
+	static func == (lhs: NoteModel, rhs: NoteModel) -> Bool {
+		return lhs.id == rhs.id
+	}
+	
 	@DocumentID var id: String?
 	@ServerTimestamp var createdAt: Timestamp?
 	var userId: String
